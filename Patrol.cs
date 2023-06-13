@@ -1,0 +1,37 @@
+using System.Collections;
+using System.Collections.Generic;
+using UnityEngine;
+
+public class Patrol : MonoBehaviour
+{
+    public float speed = 2.0f;
+    public Transform[] waypoints;
+    private int currentWaypointIndex;
+    
+    // Start is called before the first frame update
+    void Start()
+    {
+        currentWaypointIndex = 0;
+        transform.position = waypoints[currentWaypointIndex].position;
+        StartCoroutine(MoveToPosition());
+    }
+
+    IEnumerator MoveToPosition()
+    {
+        Vector3 targetPosition = waypoints[currentWaypointIndex].position;
+        while (transform.position != targetPosition)
+        {
+            transform.position = Vector3.MoveTowards(transform.position, targetPosition, speed*Time.deltaTime);
+            yield return null;
+        }
+        currentWaypointIndex++;
+        if (currentWaypointIndex == waypoints.Length)
+        {
+            currentWaypointIndex = 0;
+        }
+
+        StartCoroutine(MoveToPosition());
+    }
+   
+    }
+
